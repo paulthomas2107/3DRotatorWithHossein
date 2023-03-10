@@ -9,9 +9,32 @@ let lastMouseX = 0;
 let lastSliderX = 0;
 let moveTo = 0;
 
+const runSlider = () => {
+  const space = 30;
+  const sliderSizes = onResize();
+};
+
+const onResize = () => {
+  const boundingCarousel = sliderContent.getBoundingClientRect();
+  const sliderSizes = {
+    w: boundingCarousel.width,
+    h: boundingCarousel.height,
+  };
+  return sliderSizes;
+};
+
 const updateMouseX = (x) => {
   currentMouseX = x;
   currentMouseX < lastMouseX ? (moveTo -= 1.8) : (moveTo += 1.8);
+
+  lastMouseX = currentMouseX;
+};
+
+const updateSlider = () => {
+  lastSliderX = 0.2 * (moveTo - lastSliderX) + lastSliderX;
+  sliderItems.style.transform = `rotateY(${lastSliderX}deg)`;
+
+  requestAnimationFrame(updateSlider);
 };
 
 const checkMousePosition = () => {
@@ -44,6 +67,9 @@ const checkMousePosition = () => {
   sliderItems.addEventListener('touchmove', (e) => {
     slideTouched && e.touches[0].clientX;
   });
+
+  updateSlider();
+  runSlider();
 };
 
 checkMousePosition();
